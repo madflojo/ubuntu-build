@@ -64,12 +64,12 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           
       - name: Build
-        if: ${{ github.event_name != 'pull_request' }
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
             docker build -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:latest -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:{{ $ github.ref_name }} .
 
       - name: Push
-        if: ${{ github.event_name != 'pull_request' }
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
             docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:latest
             docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:{{ $ github.ref_name }}
