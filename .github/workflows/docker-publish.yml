@@ -66,13 +66,13 @@ jobs:
       - name: Build
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-            docker build -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:latest -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:{{ $ github.ref_name }} .
+            docker build -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:latest -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:${{ github.ref_name }} .
 
       - name: Push
         if: ${{ github.event_name != 'pull_request' }}
         run: |
             docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:latest
-            docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:{{ $ github.ref_name }}
+            docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:${{ github.ref_name }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
