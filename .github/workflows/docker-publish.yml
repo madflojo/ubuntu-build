@@ -63,26 +63,19 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+          
       - name: Build
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-            docker build -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:latest -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:${{ github.ref_name }} .
+            docker build -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:latest -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:${{ github.sha }} -t ${{ env.REGISTRY }}/madflojo/ubuntu-build:${{ steps.extract_branch.outputs.branch }} .
 
       - name: Push
         if: ${{ github.event_name != 'pull_request' }}
         run: |
             docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:latest
-            docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:${{ github.ref_name }}
-
-      # Sign the resulting Docker image digest except on PRs.
-      # This will only write to the public Rekor transparency log when the Docker
-      # repository is public to avoid leaking data.  If you would like to publish
-      # transparency data even for private images, pass --force to cosign below.
-      # https://github.com/sigstore/cosign
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          COSIGN_EXPERIMENTAL: "true"
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
-        run: cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
+            docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:${{ github.sha }}
+            docker push ${{ env.REGISTRY }}/madflojo/ubuntu-build:${{ steps.extract_branch.outputs.branch }}
