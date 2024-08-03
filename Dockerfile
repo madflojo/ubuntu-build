@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 MAINTAINER "Benjamin Cane"
 
 RUN apt-get update && \
-    apt-get install -y build-essential curl python3-pip lsb-release git ca-certificates gnupg && \
+    apt-get install -y build-essential curl python3-pip lsb-release git ca-certificates gnupg jq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -16,6 +16,7 @@ RUN apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
 
 RUN echo \
     alias docker-compose=\'docker compose\' >> ~/.bashrc
