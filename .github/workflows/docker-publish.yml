@@ -66,7 +66,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'push' && 'true' || 'false' }}
           tags: |
-            ${{ env.GH_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref }}
+            ${{ env.GH_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
             ${{ env.latest_tag == env.current_tag && env.GH_REGISTRY }}/${{ env.IMAGE_NAME }}:latest }}
 
       - name: Logout of GitHub Container Registry
@@ -96,5 +96,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'push' && 'true' || 'false' }}
           tags: |
-            ${{ env.DH_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref }}
+            ${{ env.DH_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
             ${{ env.latest_tag == env.current_tag && env.DH_REGISTRY }}/${{ env.IMAGE_NAME }}:latest }}
